@@ -1,0 +1,6 @@
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.json filter=lfs diff=lfs merge=lfs -text
+datas/*/*.csv filter=lfs diff=lfs merge=lfs -text
+datas/*/*.json filter=lfs diff=lfs merge=lfs -text
+*.parquet filter=lfs diff=lfs merge=lfs -text
+datas/output_store/*.sst filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+}
+
+version '0.1-SNAPSHOT'
+
+dependencies {
+    implementation libraries.guava
+    implementation libraries.fastutil
+    implementation libraries.smile
+    // testing
+    testImplementation libraries.assertj_core
+    testImplementation libraries.junit_jupiter_api
+    testRuntimeOnly libraries.junit_jupiter_engine
+}

@@ -1,0 +1,109 @@
+[
+  {
+    "name" : "corrsketches.aggregations.AggregateFunction",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "corrsketches.benchmark.CheckHashCollisions",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "inputPath" }
+    ]
+  },
+  {
+    "name" : "corrsketches.benchmark.ComputeBudget",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "inputPath" }
+    ]
+  },
+  {
+    "name" : "corrsketches.benchmark.ComputePairwiseJoinCorrelations",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "aggregateFunctions" },
+      { "name" : "cpuCores" },
+      { "name" : "inputPath" },
+      { "name" : "intraDatasetCombinations" },
+      { "name" : "maxSamples" },
+      { "name" : "outputPath" },
+      { "name" : "performance" },
+      { "name" : "sketchParams" }
+    ]
+  },
+  {
+    "name" : "corrsketches.benchmark.CreateColumnStore",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "dbType" },
+      { "name" : "generateQueryFile" },
+      { "name" : "inputPath" },
+      { "name" : "minRows" },
+      { "name" : "outputPath" }
+    ]
+  },
+  {
+    "name" : "corrsketches.benchmark.IndexCorrelationBenchmark",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "aggregate" },
+      { "name" : "cores" },
+      { "name" : "inputPath" },
+      { "name" : "numQueries" },
+      { "name" : "outputPath" },
+      { "name" : "params" },
+      { "name" : "runs" }
+    ],
+    "methods" : [
+      { "name" : "buildIndex", "parameterTypes" : [] },
+      { "name" : "runQueriesBenchmark", "parameterTypes" : [] },
+      { "name" : "timeQueriesBenchmark", "parameterTypes" : [] }
+    ]
+  },
+  {
+    "name" : "corrsketches.benchmark.Run",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "hashtabledb.DBType",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "java.lang.Boolean",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name" : "java.util.Collections$UnmodifiableRandomAccessList",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  }
+]

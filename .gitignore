@@ -1,0 +1,14 @@
+*.log
+.gradle/
+.settings/
+.project
+.classpath
+*.class
+.DS_Store*
+.idea/
+*.iml
+build/
+notebooks/
+output/
+datasets/
+datas/*
