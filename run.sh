@@ -11,6 +11,7 @@ CREATE_STORE_EXE="java -cp $JAR corrsketches.benchmark.CreateColumnStore"
 
 CREATE_STORE_CMD="$CREATE_STORE_EXE --input-path $INPUT_PATH --output-path $STORE_PATH --db-backend $DBTYPE"
 BENCHMARK_CMD="$BENCHMARK_EXE --input-path $STORE_PATH --output-path $RESULTS_PATH --sketch-params=$SKETCH_TYPE:$BUDGET"
+TFIDF_CMD="python tfidf/tfidf.py"
 
 echo "Compiling application..."
 gradle shadowJar
@@ -22,3 +23,7 @@ $CREATE_STORE_CMD
 echo "Running benchmark..."
 echo "Command: $BENCHMARK_CMD"
 $BENCHMARK_CMD
+
+echo "Running TF/IDF shrink csv..."
+echo "Command: $TFIDF_CMD"
+$TFIDF_CMD > final_result.txt
