@@ -16,14 +16,35 @@ import corrsketches.statistics.Stats;
 import corrsketches.statistics.Stats.Extent;
 import corrsketches.statistics.Variance;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BenchmarkUtils {
 
     public static final int minimumIntersection = 3; // minimum sample size for correlation is 2
+    static final String joinedFilePath = "./datas/joined_data";
+
+//    private static Consumer<String> writeCSV(FileWriter file) {
+//        return (String line) -> {
+//            if (!line.isEmpty()) {
+//                synchronized (file) {
+//                    try {
+//                        file.write(line);
+//                        file.flush();
+//                    } catch (IOException e) {
+//                        throw new RuntimeException("Failed to write line to file: " + line);
+//                    }
+//                }
+//            }
+//        };
+//    }
 
     public static List<PerfResult> measurePerformance(
             ColumnPair x,
@@ -331,6 +352,22 @@ public class BenchmarkUtils {
         result.unionxy_est = sketchX.unionSize(sketchY);
     }
 
+    private static void writeCSV(List<NumericJoinAggregation> joins, String filename) {
+        try {
+            Files.createDirectories(Paths.get(joinedFilePath));
+            FileWriter file = new FileWriter(joinedFilePath + "/" + filename);
+            file.write("x,y\n");
+            for (NumericJoinAggregation join : joins) {
+                for (int i = 0; i < join.valuesA.length; i++) {
+                    file.write(String.format("%f,%f\n", join.valuesA[i], join.valuesB[i]));
+                }
+            }
+            file.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write results to file");
+        }
+    }
+
     public static List<MetricsResult> computeCorrelationsAfterJoin(
             ColumnPair columnA,
             ColumnPair columnB,
@@ -341,8 +378,15 @@ public class BenchmarkUtils {
         List<NumericJoinAggregation> joins =
                 JoinAggregation.numericJoinAggregate(columnA, columnB, functions);
         // basically, this joins the two column pairs on the cate column using hash joins with aggregation function(s)
-        // in our case, this only have one element in the List<>
+        // in our case, this only have one element in the List<> for aggregation function(s)
         final long joinTime = System.nanoTime() - time0;
+
+        // TODO: joins is the result of aggregation hash join on cate col
+        // TODO: need to save this joins to a file for later use
+
+        String filename = String.format("(%s+%s)_(%s+%s).csv", columnA.datasetId, columnA.keyName, columnB.datasetId, columnB.keyName);
+
+        writeCSV(joins, filename);
 
         List<MetricsResult> results = new ArrayList<>(functions.size());
 

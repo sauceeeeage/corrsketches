@@ -190,6 +190,7 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
             if (current % 1000 == 0) {
                 double percent = 100 * current / total;
                 synchronized (System.out) {
+                    System.out.println("\r");
                     System.out.printf("Progress: %.3f%%\n", percent);
                 }
             }

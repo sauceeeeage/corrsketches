@@ -90,6 +90,7 @@ public class JoinAggregation {
             }
             results.add(
                     new NumericJoinAggregation(joinValuesA.toDoubleArray(), joinValuesB.toDoubleArray(), fn));
+            // e.g. original: 100 rows after index sketch: 10 rows and each row corresponds(aggregates) to 10 rows in original
         }
 
         return results;
