@@ -84,11 +84,11 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
         List<AggregateFunction> aggregations = parseAggregations(this.aggregateFunctions);
         System.out.println("> Using aggregate functions: " + aggregations);
 
-        ColumnStoreMetadata storeMetadata = CreateColumnStore.readMetadata(inputPath);
+        ColumnStoreMetadata storeMetadata = CreateColumnStore.readMetadata(inputPath); // this only fetch the column ids and DBtype
         BytesBytesHashtable columnStore = new BytesBytesHashtable(storeMetadata.dbType, inputPath);
 
         Set<Set<String>> columnSets = storeMetadata.columnSets;
-        // this column sets contains set of set of cp.id()s, which is in the hierarchy of all csv files-> specific csv file-> a cp.id()
+        // this column sets contains set of set of column ids, which is in the hierarchy of all csv files-> specific csv file-> a column id
         System.out.println(
                 "> Found  " + columnSets.size() + " column pair sets in DB stored at " + inputPath);
 
@@ -96,7 +96,7 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
         Set<ColumnCombination> combinations =
                 ColumnCombination.createColumnCombinations(
                         columnSets, intraDatasetCombinations, maxSamples);
-        // this is a combinations of cp.id() pairs mixed using combination method(C(x,y))
+        // this is a combinations of hashed cp.id() pairs mixed using combination method(C(x,2))
 
         String baseInputPath = Paths.get(inputPath).getFileName().toString();
         String filename =
@@ -181,8 +181,13 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
             List<SketchParams> params,
             List<AggregateFunction> functions) {
         return (ColumnCombination columnPair) -> {
-            ColumnPair x = getColumnPair(cache, hashtable, columnPair.x); // columnPair.x and .y are just cp.id()
+            ColumnPair x = getColumnPair(cache, hashtable, columnPair.x); // columnPair.x and .y are just hashed cp.id()
             ColumnPair y = getColumnPair(cache, hashtable, columnPair.y);
+
+            if(x.datasetId.equals(y.datasetId)) {
+//                throw new IllegalArgumentException("Column pair contains the same column twice\nX: " + x.datasetId + " Y: " + y.datasetId);
+                return "";
+            }
 
             List<MetricsResult> results = BenchmarkUtils.computeStatistics(x, y, params, functions);
 
@@ -190,8 +195,8 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
             if (current % 1000 == 0) {
                 double percent = 100 * current / total;
                 synchronized (System.out) {
-                    System.out.println("\r");
-                    System.out.printf("Progress: %.3f%%\n", percent);
+//                    System.out.println("\r");
+                    System.out.printf("\rProgress: %.3f%%\n", percent);
                 }
             }
 

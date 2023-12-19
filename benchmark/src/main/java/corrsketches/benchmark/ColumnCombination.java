@@ -15,7 +15,7 @@ public class ColumnCombination {
     public final String y;
 
     public ColumnCombination(String x, String y) {
-        this.x = x; // column ids
+        this.x = x; // hashed column ids
         this.y = y;
     }
 
@@ -36,7 +36,8 @@ public class ColumnCombination {
             Sampler<String> sampler = new Sampler<>(maxColumnsSamples);
             for (Set<String> c : allColumns) {
                 for (String s : c) { // c is csv file
-                    sampler.sample(s); // s is a column id
+//                    System.out.println("sampled string: " + s);
+                    sampler.sample(s); // s is a hashed column id
                     // FIXME: reservoir sampling to maxColumnsSamples which is weird.
                     //  We should increase the maxColumnsSamples or use other method.
                 }
@@ -48,13 +49,17 @@ public class ColumnCombination {
             }
         }
 
-        return result; // set of cp.id() pairs with combination method(C(x, y))
+        return result; // set of hashed cp.id() pairs with combination method(C(x, 2))
     }
 
     private static ColumnCombination createColumnCombination(Set<String> columnPair) {
         Iterator<String> it = columnPair.iterator();
         String x = it.next();
         String y = it.next();
+        if (x.equals(y)) {
+            throw new IllegalArgumentException("Column pair contains the same column twice: " + columnPair);
+        }
+//        System.out.println("x: " + x + " y: " + y);
         return new ColumnCombination(x, y);
     }
 
