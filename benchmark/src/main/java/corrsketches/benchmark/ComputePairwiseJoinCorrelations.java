@@ -91,7 +91,8 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
         // this column sets contains set of set of column ids, which is in the hierarchy of all csv files-> specific csv file-> a column id
         System.out.println(
                 "> Found  " + columnSets.size() + " column pair sets in DB stored at " + inputPath);
-
+        // this number seems like should be the number of csv files, but it is not the case.
+        // not sure why... maybe it's the DB or the serialization process???
         System.out.println("\n> Computing column statistics for all column combinations...");
         Set<ColumnCombination> combinations =
                 ColumnCombination.createColumnCombinations(
@@ -184,7 +185,7 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
             ColumnPair x = getColumnPair(cache, hashtable, columnPair.x); // columnPair.x and .y are just hashed cp.id()
             ColumnPair y = getColumnPair(cache, hashtable, columnPair.y);
 
-            if(x.datasetId.equals(y.datasetId)) {
+            if(x.datasetId.equals(y.datasetId)) { // need this probably due to poor hash function in the column store id serialization and deserialization process...
 //                throw new IllegalArgumentException("Column pair contains the same column twice\nX: " + x.datasetId + " Y: " + y.datasetId);
                 return "";
             }
@@ -196,7 +197,7 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
                 double percent = 100 * current / total;
                 synchronized (System.out) {
 //                    System.out.println("\r");
-                    System.out.printf("\rProgress: %.3f%%\n", percent);
+                    System.out.printf("\rProgress: %.3f%%", percent);
                 }
             }
 
