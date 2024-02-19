@@ -3,13 +3,24 @@ package corrsketches.benchmark;
 import corrsketches.aggregations.AggregateFunction;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.channels.FileLock;
+import java.nio.channels.NonWritableChannelException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 public class JoinAggregation {
 
@@ -55,6 +66,8 @@ public class JoinAggregation {
         // TODO: Aggregate left-side of the table?
         // FIXME: aggregate using given functions
 
+        List<String> keyValues = columnB.keyValues;
+
         // create index for primary key in column B
         Map<String, DoubleArrayList> indexB = createKeyIndex(columnB);
         // this index is a hashmap of <colPair.cateColVal, colPair.numColVal>
@@ -88,12 +101,54 @@ public class JoinAggregation {
                     // so this is basically doing the func aggregateColumnPair again, at least sort of...
                 }
             }
-            results.add(
-                    new NumericJoinAggregation(joinValuesA.toDoubleArray(), joinValuesB.toDoubleArray(), fn));
+            NumericJoinAggregation aggregation =
+                    new NumericJoinAggregation(joinValuesA.toDoubleArray(), joinValuesB.toDoubleArray(), fn);
+            // store the key values and the aggregated values into csv file
+
+            // (COVID-19_Daily_Testing_-_By_Person_-_Historical.csv,Day,People Positive - Age 40-49)+(COVID-19_Daily_Testing_-_By_Test.csv,Day,Not-Positive Tests - Age 18-29).csv
+            String filename = "(" + columnA.datasetId + "," + columnA.keyName + "," + columnA.columnName + ")+(" + columnB.datasetId + "," + columnB.keyName + "," + columnB.columnName + ").csv";
+//            writeCSV(keyValues, aggregation, filename, columnA.keyName, columnA.columnName, columnA.columnName);
+
+            results.add(aggregation);
             // e.g. original: 100 rows after index sketch: 10 rows and each row corresponds(aggregates) to 10 rows in original
         }
 
         return results;
+    }
+
+    static final String joinedFilePath = "datas/joined_data";
+    private static void writeCSV(List<String> key, NumericJoinAggregation join, String filename, String k_name, String x_name, String y_name) {
+
+//        Path path = Files.createTempFile("foo","txt");
+//        Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
+//        try (FileInputStream fis = new FileInputStream(path.toFile());
+//             FileLock lock = fis.getChannel().lock()) {
+//            // unreachable code
+//        } catch (NonWritableChannelException e) {
+//            // handle exception
+//        }
+        try {
+            String filenameWithoutSlash = filename.replaceAll("/", "_");
+            String filenameWithoutSpace = filenameWithoutSlash.replaceAll("\\s+", "");
+            Files.createDirectories(Paths.get(joinedFilePath));
+            File f = new File(joinedFilePath + "/" + filenameWithoutSpace);
+            if (f.createNewFile()) {
+                System.out.println("File created: " + f.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+            FileWriter file = new FileWriter(f.getAbsoluteFile(), true);
+            file.write(String.format("%s,%s,%s\n", k_name, x_name, y_name));
+
+            for (int i = 0; i < join.valuesA.length; i++) {
+                file.write(String.format("%s,%f,%f\n", key.get(i), join.valuesA[i], join.valuesB[i]));
+                file.flush();
+            }
+
+            file.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Map<String, DoubleArrayList> createKeyIndex(ColumnPair column) {

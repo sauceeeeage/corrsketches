@@ -15,6 +15,7 @@ datas/*
 final_result.txt
 benchmark/out/production/classes/META-INF/native-image/picocli-generated/corrsketches/benchmark/*
 benchmark/out/test/resources/corrsketches/benchmark/TablesTest/*
+test.py
 *.csv
 *.parquet
 *.json

@@ -349,7 +349,7 @@ public class BenchmarkUtils {
             }
             file.close();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to write results to file");
+            throw new RuntimeException(e);
         }
     }
 
@@ -365,13 +365,6 @@ public class BenchmarkUtils {
         // basically, this joins the two column pairs on the cate column using hash joins with aggregation function(s)
         // in our case, this only have one element in the List<> for aggregation function(s)
         final long joinTime = System.nanoTime() - time0;
-
-        // TODO: joins is the result of aggregation hash join on cate col
-        // TODO: need to save this joins to a file for later use
-        // "X(School_Survey_Effective_Leaders,Zip,Chicago_Public_Schools_-_School_Progress_Reports_SY2122.csv) Y(School_Survey_Involved_Families,Graduation_4_Year_CPS_Pct_Year_1,Chicago_Public_Schools_-_School_Progress_Reports_SY2122.csv)"
-        String filename = String.format("(%s,%s,%s)+(%s,%s,%s).csv", columnA.datasetId, columnA.keyName, columnA.columnName ,columnB.datasetId, columnB.keyName, columnB.columnName);
-
-        writeCSV(joins, filename, columnA.columnName, columnB.columnName);
 
         List<MetricsResult> results = new ArrayList<>(functions.size());
 
@@ -410,6 +403,25 @@ public class BenchmarkUtils {
             r.time.qn = System.nanoTime() - time0;
 
             results.add(r);
+
+            // TODO: joins is the result of aggregation hash join on cate col
+            // TODO: need to save this joins to a file for later use
+            // "X(School_Survey_Effective_Leaders,Zip,Chicago_Public_Schools_-_School_Progress_Reports_SY2122.csv) Y(School_Survey_Involved_Families,Graduation_4_Year_CPS_Pct_Year_1,Chicago_Public_Schools_-_School_Progress_Reports_SY2122.csv)"
+//            if (r.mi_actual > 1.1) {
+////                System.out.println("mi actual greater than 1.1 for:");
+////                System.out.println("X: " + columnA.columnName + " Y: " + columnB.columnName);
+//                String filename = String.format("(%s,%s,%s)+(%s,%s,%s).csv", columnA.datasetId, columnA.keyName, columnA.columnName, columnB.datasetId, columnB.keyName, columnB.columnName);
+////                System.out.println("filename: " + filename);
+////                try {
+////                    FileWriter file = new FileWriter(joinedFilePath + "/" + "mi_greater_than_1.1.txt", true);
+////                    file.write(filename);
+////                    file.write("\n");
+////                    file.close();
+////                } catch (IOException e) {
+////                    throw new RuntimeException(e);
+////                }
+////                writeCSV(joins, filename, columnA.columnName, columnB.columnName);
+//            }
         }
 
         return results;

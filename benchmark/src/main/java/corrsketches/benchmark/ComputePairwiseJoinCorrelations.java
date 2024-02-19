@@ -199,6 +199,7 @@ public class ComputePairwiseJoinCorrelations extends CliTool implements Serializ
 //                    System.out.println("\r");
                     System.out.printf("\rProgress: %.3f%%", percent);
                 }
+                System.out.println();
             }
 
             if (results == null || results.isEmpty()) {

@@ -1,6 +1,6 @@
-INPUT_PATH=${INPUT_PATH:-"./datas/test_data"}
-STORE_PATH=${STORE_PATH:-"./datas/test_output_store"}
-RESULTS_PATH=${RESULTS_PATH:-"./datas/test_results"}
+INPUT_PATH=${INPUT_PATH:-"./datas/test_data/test1"}
+STORE_PATH=${STORE_PATH:-"./datas/test_output_store/test1"}
+RESULTS_PATH=${RESULTS_PATH:-"./datas/test_results/test1"}
 SKETCH_TYPE=${SKETCH_TYPE:-"KMV"}
 BUDGET=${BUDGET:-256}
 DBTYPE=${DBTYPE:-"ROCKSDB"}
@@ -12,6 +12,10 @@ CREATE_STORE_EXE="java -cp $JAR corrsketches.benchmark.CreateColumnStore"
 CREATE_STORE_CMD="$CREATE_STORE_EXE --input-path $INPUT_PATH --output-path $STORE_PATH --db-backend $DBTYPE"
 BENCHMARK_CMD="$BENCHMARK_EXE --input-path $STORE_PATH --output-path $RESULTS_PATH --sketch-params=$SKETCH_TYPE:$BUDGET"
 TFIDF_CMD="python tfidf/tfidf.py"
+
+echo "Initial screening for duplicated datasets..."
+echo "Command: python initial_screening.py $INPUT_PATH"
+python initial_screening.py $INPUT_PATH
 
 echo "Compiling application..."
 gradle shadowJar
