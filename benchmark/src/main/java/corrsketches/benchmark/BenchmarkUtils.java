@@ -16,8 +16,7 @@ import corrsketches.statistics.Stats;
 import corrsketches.statistics.Stats.Extent;
 import corrsketches.statistics.Variance;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -422,6 +421,20 @@ public class BenchmarkUtils {
 ////                }
 ////                writeCSV(joins, filename, columnA.columnName, columnB.columnName);
 //            }
+            try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream("joined_datasets.csv", true), "utf-8"))) {
+                if (Files.size(Paths.get("joined_datasets.csv")) == 0) {
+                    writer.write("table1,cate1,num1,table2,cate2,num2\n");
+                }
+                writer.write(columnA.datasetId + "," + columnA.keyName + "," + columnA.columnName + "," + columnB.datasetId + "," + columnB.keyName + "," + columnB.columnName + "\n");
+                writer.flush();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return results;

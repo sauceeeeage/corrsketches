@@ -1,6 +1,6 @@
-INPUT_PATH=${INPUT_PATH:-"./datas/test_data/test1"}
-STORE_PATH=${STORE_PATH:-"./datas/test_output_store/test1"}
-RESULTS_PATH=${RESULTS_PATH:-"./datas/test_results/test1"}
+INPUT_PATH=${INPUT_PATH:-"./datas/test_data/test3"}
+STORE_PATH=${STORE_PATH:-"./datas/test_output_store/test3"}
+RESULTS_PATH=${RESULTS_PATH:-"./datas/test_results/test3"}
 SKETCH_TYPE=${SKETCH_TYPE:-"KMV"}
 BUDGET=${BUDGET:-256}
 DBTYPE=${DBTYPE:-"ROCKSDB"}
